@@ -63,4 +63,9 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/health")
+    public ResponseEntity<String> getHealth(@PathVariable Long id) {
+        
+        return ResponseEntity.ok("UP").build();
+    }
 }
