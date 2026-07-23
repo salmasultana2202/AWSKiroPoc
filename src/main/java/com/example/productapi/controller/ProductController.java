@@ -64,7 +64,7 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/health")
-    public ResponseEntity<String> getHealth(@PathVariable Long id) {
+    public ResponseEntity<String> getHealth() {
         
         return ResponseEntity.ok("UP");
     }
