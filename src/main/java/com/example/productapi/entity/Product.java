@@ -1,12 +1,16 @@
 package com.example.productapi.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
@@ -21,25 +25,27 @@ public class Product {
     private Long id;
 
     @NotBlank(message = "Product name is required")
+    @Column(nullable = false)
     private String name;
 
     private String description;
 
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be positive")
+    @Column(nullable = false)
     private BigDecimal price;
 
     @NotNull(message = "Quantity is required")
-    @Positive(message = "Quantity must be positive")
+    @PositiveOrZero(message = "Quantity must be zero or positive")
+    @Column(nullable = false)
     private Integer quantity;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
     public Product() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
 
     public Product(String name, String description, BigDecimal price, Integer quantity) {
@@ -47,7 +53,16 @@ public class Product {
         this.description = description;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    @PrePersist
+    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -97,15 +112,7 @@ public class Product {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }
